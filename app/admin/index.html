@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Painel · C&amp;C Joias</title>
+<link rel="icon" href="/assets/icon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:opsz,wght@6..96,400&family=Manrope:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="/admin/admin.css">
+<script src="/admin/admin.js" defer></script>
+</head>
+<body>
+
+<section class="login" data-screen="login" hidden>
+  <form class="login-box" data-login novalidate>
+    <p class="brand">C&amp;C <span>Joias</span></p>
+    <h1>Painel da loja</h1>
+    <label>E-mail
+      <input type="email" name="email" autocomplete="username" required>
+    </label>
+    <label>Senha
+      <input type="password" name="password" autocomplete="current-password" required>
+    </label>
+    <p class="form-error" data-login-error role="alert"></p>
+    <button type="submit" class="btn btn-primary">Entrar</button>
+  </form>
+</section>
+
+<div class="app" data-screen="app" hidden>
+  <header class="topbar">
+    <p class="brand">C&amp;C <span>Joias</span></p>
+    <nav class="tabs" aria-label="Seções do painel">
+      <a href="#produtos" data-tab="produtos">Produtos</a>
+      <a href="#lojas" data-tab="lojas">Lojas</a>
+    </nav>
+    <div class="topbar-end">
+      <a href="/" target="_blank" rel="noopener">Ver site</a>
+      <span class="who" data-who></span>
+      <button type="button" class="btn btn-quiet" data-logout>Sair</button>
+    </div>
+  </header>
+  <main class="content" data-content></main>
+</div>
+
+<div class="toast" role="status" aria-live="polite" data-toast></div>
+</body>
+</html>

@@ -1,0 +1,213 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#1B2348">
+<!--meta-->
+<link rel="icon" href="/assets/icon.svg" type="image/svg+xml">
+<link rel="preload" href="/api/catalog" as="fetch" crossorigin>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400;0,6..96,500;1,6..96,400&family=Manrope:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="/style.css">
+<script src="/script.js" defer></script>
+</head>
+<body>
+<!--
+THESIS: A vitrine da loja de bairro: a foto é o produto e todo caminho termina numa mensagem já escrita para uma pessoa real no WhatsApp. Recusa o template de e-commerce lotado de selos, banners promocionais e caixas.
+OWN-WORLD: Faixas azul-noite (#1B2348) abrem e fecham a página; o catálogo vive no creme (#F7F4EE) com fios #E2DCD0; magenta (#A51C68) só para ação e estado. Bodoni Moda grande e calma nos títulos, Manrope na interface. Fotos 4:5 sem moldura, sem cantos arredondados, sem cards.
+STORY: O cliente local chega pelo Instagram, reconhece as peças, filtra, abre a peça, põe na sacola e vê o próprio pedido escrito como mensagem antes de enviar.
+FIRST VIEWPORT: Faixa azul com o título "Detalhes que revelam sua presença." à esquerda e a foto editorial em retrato à direita (no celular, foto em cima, título embaixo), legenda que leva à peça da foto, ação "Ver a coleção".
+FORM: grid de vitrine no estilo do site de referência escolhido pelo cliente (fixado pelo brief); sem sorteio.
+FINISH: unreviewed and undocumented is unfinished; this build ends with the finish review.
+-->
+<a class="skip" href="#conteudo">Pular para o conteúdo</a>
+
+<div class="storebar" id="storebar" hidden>
+  <p>Você está na <strong data-store-name>C&amp;C Joias</strong></p>
+  <button type="button" class="linkish" data-open-stores>Trocar loja</button>
+</div>
+
+<header class="site-header">
+  <div class="wrap header-row">
+    <a class="logo" href="/" aria-label="C&amp;C Joias, página inicial">
+      <span class="logo-mark">C&amp;C</span>
+      <span class="logo-sub">Joias</span>
+    </a>
+    <nav class="header-nav" aria-label="Categorias" id="header-nav"></nav>
+    <div class="header-actions">
+      <button type="button" class="icon-btn" data-focus-search aria-label="Buscar na coleção">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m15.5 15.5 5 5"/></svg>
+      </button>
+      <button type="button" class="icon-btn bag-btn" data-open-bag aria-label="Abrir sacola">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 8h14l-1.2 12.2a1 1 0 0 1-1 .8H7.2a1 1 0 0 1-1-.8L5 8Z"/><path d="M9 8V6.5a3 3 0 0 1 6 0V8"/></svg>
+        <span class="bag-count" data-bag-count hidden>0</span>
+      </button>
+    </div>
+  </div>
+</header>
+
+<main id="conteudo">
+  <div data-view="home">
+    <section class="hero" aria-labelledby="hero-title">
+      <div class="wrap hero-grid">
+        <div class="hero-copy">
+          <h1 id="hero-title">Detalhes que revelam sua presença.</h1>
+          <p>Joias, bolsas, relógios e acessórios escolhidos para quem valoriza o detalhe.</p>
+          <div class="hero-actions">
+            <a class="btn btn-light" href="/#colecao" data-scroll="colecao">Ver a coleção</a>
+            <a class="btn btn-ghost-light" href="/#atendimento" data-scroll="atendimento">Falar com a loja</a>
+          </div>
+        </div>
+        <div class="hero-media" role="region" aria-roledescription="carrossel" aria-label="Fotos em destaque">
+          <div class="hero-track" data-hero-track>
+            <figure class="hero-slide" aria-roledescription="slide" aria-label="1 de 5">
+              <img src="/assets/hero/hero-1-1600.webp" srcset="/assets/hero/hero-1-800.webp 800w, /assets/hero/hero-1-1600.webp 1600w" sizes="(min-width: 900px) 48vw, 100vw" width="1638" height="2048" style="object-position:50% 30%" alt="Modelo sentada segurando clutch prata de textura croco, com colar e brincos" fetchpriority="high">
+              <figcaption><a href="/p/clutch-croco-prata">Clutch croco prata com fecho dourado</a></figcaption>
+            </figure>
+            <figure class="hero-slide" aria-roledescription="slide" aria-label="2 de 5">
+              <img src="/assets/hero/hero-2-1600.webp" srcset="/assets/hero/hero-2-800.webp 800w, /assets/hero/hero-2-1600.webp 1600w" sizes="(min-width: 900px) 48vw, 100vw" width="1638" height="2048" style="object-position:50% 40%" alt="Modelo de costas usando colar gravatinha de malha prateada" loading="lazy">
+              <figcaption><a href="/p/colar-gravatinha">Colar gravatinha · Nádia Gimenes</a></figcaption>
+            </figure>
+            <figure class="hero-slide" aria-roledescription="slide" aria-label="3 de 5">
+              <img src="/assets/hero/hero-3-1600.webp" srcset="/assets/hero/hero-3-800.webp 800w, /assets/hero/hero-3-1600.webp 1600w" sizes="(min-width: 900px) 48vw, 100vw" width="1638" height="2048" style="object-position:50% 55%" alt="Modelo com bolsa vermelha de textura croco e alça de corrente dourada" loading="lazy">
+              <figcaption><a href="/p/bolsa-croco-vermelha-com-corrente">Bolsa croco vermelha com alça de corrente</a></figcaption>
+            </figure>
+            <figure class="hero-slide" aria-roledescription="slide" aria-label="4 de 5">
+              <img src="/assets/hero/hero-4-1600.webp" srcset="/assets/hero/hero-4-800.webp 800w, /assets/hero/hero-4-1600.webp 1600w" sizes="(min-width: 900px) 48vw, 100vw" width="1638" height="2048" style="object-position:50% 40%" alt="Modelo sorrindo usando choker de pedras vermelhas com pingente" loading="lazy">
+              <figcaption><a href="/p/choker-de-pedras-vermelhas">Choker de pedras vermelhas</a></figcaption>
+            </figure>
+            <figure class="hero-slide" aria-roledescription="slide" aria-label="5 de 5">
+              <img src="/assets/hero/hero-5-1600.webp" srcset="/assets/hero/hero-5-800.webp 800w, /assets/hero/hero-5-1600.webp 1600w" sizes="(min-width: 900px) 48vw, 100vw" width="1080" height="1920" style="object-position:50% 45%" alt="Mão com anel de pedra turquesa junto à orelha com brinco" loading="lazy">
+              <figcaption><a href="/p/anel-com-pedra-turquesa">Anel com pedra turquesa</a></figcaption>
+            </figure>
+          </div>
+          <div class="hero-controls">
+            <span class="hero-count" data-hero-count aria-live="polite">1 / 5</span>
+            <button type="button" class="round-btn" data-hero-prev aria-label="Foto anterior"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M10 3 5 8l5 5"/></svg></button>
+            <button type="button" class="round-btn" data-hero-next aria-label="Próxima foto"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="m6 3 5 5-5 5"/></svg></button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <ul class="promise wrap" data-promise>
+      <li>Atendimento de pessoa para pessoa pelo WhatsApp</li>
+      <li data-two-stores hidden>Duas lojas, cada uma com sua sacola</li>
+      <li>Disponibilidade confirmada no atendimento</li>
+    </ul>
+
+    <section class="editorial" aria-labelledby="editorial-title">
+      <div class="wrap editorial-grid">
+        <img src="/assets/editorial-1600.webp" srcset="/assets/editorial-800.webp 800w, /assets/editorial-1600.webp 1600w" sizes="(min-width: 900px) 50vw, 100vw" width="1638" height="2048" loading="lazy" alt="Modelo com blusa listrada azul usando colar riviera, anel e brincos de pedra turquesa">
+        <div class="editorial-copy">
+          <h2 id="editorial-title">Um detalhe muda o visual inteiro.</h2>
+          <p>O colar riviera sobre o listrado azul e o toque turquesa no anel e nos brincos: poucos elementos, um visual completo.</p>
+          <a class="btn btn-dark" href="/p/anel-com-pedra-turquesa">Ver o anel turquesa</a>
+        </div>
+      </div>
+    </section>
+
+    <section class="section wrap" id="colecao" aria-labelledby="colecao-title">
+      <header class="section-head">
+        <h2 id="colecao-title">A coleção</h2>
+        <p data-collection-sub>Tudo o que está na vitrine da loja.</p>
+      </header>
+
+      <div class="chips" role="group" aria-label="Filtrar por categoria" data-chips></div>
+
+      <form class="toolbar" role="search" data-toolbar>
+        <label class="search">
+          <span class="sr-only">Buscar peças</span>
+          <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m15.5 15.5 5 5"/></svg>
+          <input type="search" id="busca" name="q" placeholder="Buscar por peça ou marca" autocomplete="off" enterkeyhint="search">
+        </label>
+        <label class="check">
+          <input type="checkbox" name="disp">
+          <span>Só disponíveis</span>
+        </label>
+        <label class="sort">
+          <span>Ordenar</span>
+          <select name="ord">
+            <option value="">Novidades</option>
+            <option value="asc">Menor preço</option>
+            <option value="desc">Maior preço</option>
+          </select>
+        </label>
+      </form>
+
+      <p class="result-count" data-result-count aria-live="polite"></p>
+      <ul class="grid" data-grid aria-busy="true">
+        <li class="card skeleton"></li><li class="card skeleton"></li><li class="card skeleton"></li><li class="card skeleton"></li>
+      </ul>
+      <div class="empty" data-empty hidden>
+        <p>Nenhuma peça encontrada com esses filtros.</p>
+        <button type="button" class="btn btn-dark" data-clear>Limpar filtros</button>
+      </div>
+      <nav class="pager" aria-label="Páginas da coleção" data-pager></nav>
+    </section>
+  </div>
+
+  <div data-view="product" hidden>
+    <div class="wrap">
+      <nav class="crumbs" aria-label="Você está em" data-crumbs></nav>
+      <article class="product" data-product></article>
+    </div>
+    <section class="section wrap" aria-labelledby="related-title" data-related hidden>
+      <header class="section-head">
+        <h2 id="related-title" data-related-title>Mais peças</h2>
+      </header>
+      <ul class="grid grid-row" data-related-list></ul>
+    </section>
+  </div>
+
+  <section class="contact" id="atendimento" aria-labelledby="atendimento-title">
+    <div class="wrap contact-grid">
+      <div>
+        <h2 id="atendimento-title">Atendimento de pessoa para pessoa.</h2>
+        <p>Conte o que procura, para quem é e a ocasião. A equipe da loja ajuda você a escolher dentro do valor que você imagina.</p>
+        <div data-contact-cta></div>
+      </div>
+      <ul class="stores" data-stores></ul>
+    </div>
+  </section>
+</main>
+
+<footer class="site-footer">
+  <div class="wrap footer-row">
+    <a class="logo logo-light" href="/" aria-label="C&amp;C Joias, página inicial">
+      <span class="logo-mark">C&amp;C</span>
+      <span class="logo-sub">Joias</span>
+    </a>
+    <p>Preços e disponibilidade são confirmados no atendimento.</p>
+    <a class="footer-ig" href="https://www.instagram.com/cec.joias/" rel="noopener" target="_blank">Instagram @cec.joias</a>
+  </div>
+</footer>
+
+<dialog class="drawer" id="bag" aria-labelledby="bag-title">
+  <div class="drawer-head">
+    <h2 id="bag-title">Sacola</h2>
+    <button type="button" class="icon-btn" data-close aria-label="Fechar sacola">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg>
+    </button>
+  </div>
+  <div class="drawer-body" data-bag-body></div>
+</dialog>
+
+<dialog class="sheet" id="stores-dialog" aria-labelledby="stores-title">
+  <div class="drawer-head">
+    <h2 id="stores-title">Escolha a loja</h2>
+    <button type="button" class="icon-btn" data-close aria-label="Fechar">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg>
+    </button>
+  </div>
+  <p class="sheet-note">Cada loja tem estoque e sacola próprios. Os itens da outra sacola continuam salvos.</p>
+  <ul class="store-pick" data-store-pick></ul>
+</dialog>
+
+<div class="toast" role="status" aria-live="polite" data-toast></div>
+
+<noscript><p class="wrap">Ative o JavaScript para ver o catálogo.</p></noscript>
+</body>
+</html>

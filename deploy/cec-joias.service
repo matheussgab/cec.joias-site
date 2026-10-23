@@ -1,0 +1,22 @@
+# /etc/systemd/system/cec-joias.service
+[Unit]
+Description=C&C Joias (site e API)
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+User=cecjoias
+WorkingDirectory=/opt/cec-joias
+ExecStart=/usr/bin/node --env-file=/opt/cec-joias/.env src/server.js
+Restart=on-failure
+RestartSec=3
+
+# Endurecimento: o processo só escreve na pasta de fotos.
+NoNewPrivileges=true
+ProtectSystem=strict
+ProtectHome=true
+PrivateTmp=true
+ReadWritePaths=/var/lib/cec-joias
+
+[Install]
+WantedBy=multi-user.target
