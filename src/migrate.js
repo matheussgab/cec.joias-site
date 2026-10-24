@@ -2,6 +2,7 @@
 import { readdir, readFile } from 'node:fs/promises';
 import path from 'node:path';
 import { pool, tx } from './db.js';
+import { ensureBucket } from './images.js';
 
 const dir = path.resolve('src/migrations');
 
@@ -28,4 +29,5 @@ for (const file of files) {
   count++;
 }
 console.log(count ? `${count} migração(ões) aplicada(s).` : 'Banco já está atualizado.');
+if (await ensureBucket()) console.log('bucket de fotos criado no Supabase Storage.');
 await pool.end();

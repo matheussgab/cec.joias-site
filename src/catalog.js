@@ -1,7 +1,10 @@
-// Catálogo público: montado do banco uma vez e mantido em memória até o painel alterar algo.
+// Catálogo público: montado do banco e mantido em memória até o painel alterar algo.
+// Na Vercel há várias instâncias e só a que recebeu a alteração fica sabendo; o prazo faz as outras se atualizarem.
 import { createHash } from 'node:crypto';
+import { config } from './config.js';
 import { pool } from './db.js';
 
+const MAX_AGE_MS = 30_000;
 let cache = null;
 let generation = 0;
 
@@ -11,7 +14,7 @@ export function invalidateCatalog() {
 }
 
 export async function getCatalog() {
-  if (cache) return cache;
+  if (cache && Date.now() - cache.at < MAX_AGE_MS) return cache;
   const gen = generation;
 
   const [stores, categories, products, images, variants] = await Promise.all([
@@ -36,6 +39,7 @@ export async function getCatalog() {
   const vars = byProduct(variants.rows, r => ({ n: r.name, s: r.stock }));
 
   const data = {
+    imgBase: config.imgBase,
     stores: stores.rows.map(s => ({ id: s.id, name: s.name, short: s.short_name, intro: s.intro, whatsapp: s.whatsapp, instagram: s.instagram, address: s.address, hours: s.hours, accent: s.accent })),
     categories: categories.rows,
     products: products.rows.map(p => ({
@@ -46,7 +50,7 @@ export async function getCatalog() {
   };
 
   const body = JSON.stringify(data);
-  const built = { data, body, etag: '"' + createHash('sha1').update(body).digest('base64url') + '"' };
+  const built = { data, body, at: Date.now(), etag: '"' + createHash('sha1').update(body).digest('base64url') + '"' };
   if (gen === generation) cache = built;
   return built;
 }

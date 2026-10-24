@@ -11,7 +11,7 @@
   const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]);
   const money = cents => (cents / 100).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
   const norm = t => String(t).toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
-  const imgSrc = (k, w) => `/uploads/${k}-${w}.webp`;
+  const imgSrc = (k, w) => `${state.catalog.imgBase}/${k}-${w}.webp`;
   const imgSet = k => WIDTHS.map(w => `${imgSrc(k, w)} ${w}w`).join(', ');
   const plural = (n, one, many) => `${n} ${n === 1 ? one : many}`;
 

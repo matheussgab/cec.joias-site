@@ -10,14 +10,17 @@ app/                 site (HTML, CSS e JS puros, sem build)
   admin/             painel da loja
   assets/            imagens fixas (hero, editorial, ícone)
 src/                 API em Node (node:http) + PostgreSQL
-  server.js          rotas, arquivos estáticos, cabeçalhos de segurança
-  catalog.js         GET /api/catalog: catálogo inteiro numa chamada, em cache até o painel mudar algo
+  app.js             rotas, arquivos estáticos, cabeçalhos de segurança
+  server.js          servidor Node (local e VPS)
+  catalog.js         GET /api/catalog: catálogo inteiro numa chamada, em cache até o painel mudar algo (máx. 30 s)
   products.js        regras de cadastro (produtos, variações, estoque, fotos, lojas)
   auth.js            login do painel (scrypt, sessão em cookie httpOnly, limite de tentativas)
-  images.js          fotos reconvertidas para WebP em 480/960/1600 px, sem EXIF
+  images.js          fotos reconvertidas para WebP em 480/960/1600 px, sem EXIF; em disco ou no Supabase Storage
   migrations/        esquema do banco
 scripts/             banco local, importação do mockup, criação de admin
-deploy/              nginx, systemd e passo a passo de produção
+api/index.js         função da Vercel (usa src/app.js)
+vercel.json          rotas da Vercel: estáticos de app/ pelo CDN, o resto pela função
+deploy/              nginx, systemd e passo a passo de produção em VPS
 mockup/              protótipo original aprovado pelo cliente (referência)
 ```
 
@@ -46,7 +49,7 @@ npm run dev                 # http://localhost:3000  ·  painel em /admin
 - **Painel:**
   - senha com hash scrypt;
   - sessão em cookie `httpOnly` + `SameSite=Strict` (`Secure` em produção);
-  - limite de 10 tentativas de login a cada 15 minutos por IP;
+  - limite de 10 tentativas de login a cada 15 minutos por IP (guardado no banco);
   - checagem de origem em toda alteração (CSRF).
 - Preço e estoque sempre vêm do banco. O texto do pedido é montado no navegador, então **a loja confere os valores na conversa do WhatsApp**.
 - **Fotos:** validadas e reconvertidas no servidor, com nome aleatório e sem metadados.
@@ -90,4 +93,14 @@ npm run dev                 # http://localhost:3000  ·  painel em /admin
   - apaga os arquivos das fotos ao excluir um produto;
   - gera as tags de prévia em `/p/slug`.
 
-Produção: veja [deploy/README.md](deploy/README.md).
+## Produção na Vercel + Supabase
+
+- **Banco:** Postgres do Supabase. `DATABASE_URL` usa a conexão do pooler (Supavisor).
+- **Fotos:** bucket público `fotos` no Supabase Storage. O navegador baixa as fotos direto de lá (`imgBase` no catálogo).
+- **Site:** os arquivos de `app/` saem pelo CDN da Vercel; páginas, `/p/slug`, `/admin` e `/api` passam pela função `api/index.js`.
+- **Variáveis na Vercel:** `DATABASE_URL`, `SUPABASE_URL`, `SUPABASE_SERVICE_ROLE_KEY`, `NODE_ENV=production` e, com domínio próprio, `PUBLIC_URL`.
+- **Migrações e admin** rodam da sua máquina, com o `.env` apontando para o Supabase: `npm run migrate` e `npm run admin:create -- email`.
+- **Fotos grandes:** a Vercel recusa envios acima de 4,5 MB, então o painel reduz no navegador as fotos acima de 4 MB antes de enviar.
+- **Deploy:** cada push na branch `produto` publica em produção; as outras branches geram prévias.
+
+Em VPS próprio: veja [deploy/README.md](deploy/README.md).

@@ -62,7 +62,7 @@ export function publicRoutes(router) {
     await page(res, 200, {
       title: `${p.name} — ${money(p.price)} · C&C Joias`,
       description: p.desc || `${p.name}${p.brand ? ' · ' + p.brand : ''}`,
-      image: p.imgs[0] ? `${config.publicUrl}/uploads/${p.imgs[0].k}-960.webp` : null,
+      image: p.imgs[0] ? new URL(`${config.imgBase}/${p.imgs[0].k}-960.webp`, config.publicUrl).href : null,
       url: `${config.publicUrl}/p/${p.slug}`,
     });
   });

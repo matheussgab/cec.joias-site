@@ -1,0 +1,29 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "framework": null,
+  "installCommand": "npm install --omit=dev",
+  "buildCommand": "",
+  "outputDirectory": "app",
+  "regions": ["gru1"],
+  "functions": {
+    "api/index.js": {
+      "includeFiles": "app/{index.html,admin/index.html}",
+      "maxDuration": 30
+    }
+  },
+  "routes": [
+    {
+      "src": "/(.*)",
+      "headers": {
+        "x-content-type-options": "nosniff",
+        "referrer-policy": "strict-origin-when-cross-origin",
+        "permissions-policy": "camera=(), microphone=(), geolocation=()",
+        "x-frame-options": "DENY"
+      },
+      "continue": true
+    },
+    { "src": "/(|index\\.html|admin/?|healthz|p/.*|api/.*|uploads/.*)", "dest": "/api/index" },
+    { "handle": "filesystem" },
+    { "src": "/(.*)", "dest": "/api/index" }
+  ]
+}

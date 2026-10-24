@@ -82,21 +82,24 @@ export async function requireAdmin(req) {
   return admin;
 }
 
-// Limite simples de tentativas de login por IP (memória do processo).
-const attempts = new Map();
-const WINDOW_MS = 15 * 60 * 1000, MAX_ATTEMPTS = 10;
+// Limite de tentativas de login por IP, guardado no banco para valer em todas as instâncias da Vercel.
+const MAX_ATTEMPTS = 10;
 
 export function clientIp(req) {
   if (config.trustProxy && req.headers['x-forwarded-for']) return String(req.headers['x-forwarded-for']).split(',')[0].trim();
   return req.socket.remoteAddress;
 }
 
-export function checkLoginRate(ip) {
-  const now = Date.now();
-  if (attempts.size > 5000) for (const [k, v] of attempts) if (v.reset < now) attempts.delete(k);
-  const a = attempts.get(ip);
-  if (!a || a.reset < now) { attempts.set(ip, { count: 1, reset: now + WINDOW_MS }); return; }
-  if (++a.count > MAX_ATTEMPTS) throw new HttpError(429, 'Muitas tentativas. Aguarde 15 minutos.');
+export async function checkLoginRate(ip) {
+  const { rows } = await pool.query(
+    `INSERT INTO login_attempts (ip, count, reset_at) VALUES ($1, 1, now() + interval '15 minutes')
+     ON CONFLICT (ip) DO UPDATE SET
+       count = CASE WHEN login_attempts.reset_at < now() THEN 1 ELSE login_attempts.count + 1 END,
+       reset_at = CASE WHEN login_attempts.reset_at < now() THEN excluded.reset_at ELSE login_attempts.reset_at END
+     RETURNING count`, [String(ip || '')]);
+  if (rows[0].count > MAX_ATTEMPTS) throw new HttpError(429, 'Muitas tentativas. Aguarde 15 minutos.');
 }
 
-export function clearLoginRate(ip) { attempts.delete(ip); }
+export async function clearLoginRate(ip) {
+  await pool.query('DELETE FROM login_attempts WHERE ip = $1 OR reset_at < now()', [String(ip || '')]);
+}

@@ -1,4 +1,5 @@
 import { checkLoginRate, checkOrigin, clearLoginRate, clientIp, currentAdmin, login, logout, requireAdmin, sessionCookie } from '../auth.js';
+import { config } from '../config.js';
 import { HttpError, json, readForm, readJson } from '../http.js';
 import {
   addImage, createProduct, deleteImage, deleteProduct, listCategories, listProducts, listStores, parseProduct, updateProduct, updateStore,
@@ -16,12 +17,12 @@ export function adminRoutes(router) {
   router.post('/api/admin/login', async (req, res) => {
     checkOrigin(req);
     const ip = clientIp(req);
-    checkLoginRate(ip);
+    await checkLoginRate(ip);
     const b = await readJson(req, 2000);
     const email = String(b.email || '').trim().toLowerCase();
     const token = await login(email, String(b.password || ''));
     if (!token) throw new HttpError(401, 'E-mail ou senha incorretos.');
-    clearLoginRate(ip);
+    await clearLoginRate(ip);
     json(res, 200, { email }, { 'set-cookie': sessionCookie(token) });
   });
 
@@ -40,7 +41,7 @@ export function adminRoutes(router) {
   router.get('/api/admin/products', async (req, res) => {
     await requireAdmin(req);
     const [products, categories, stores] = await Promise.all([listProducts(), listCategories(), listStores()]);
-    json(res, 200, { products, categories, stores });
+    json(res, 200, { products, categories, stores, imgBase: config.imgBase });
   });
 
   router.post('/api/admin/products', async (req, res) => {

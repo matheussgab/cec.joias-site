@@ -2,6 +2,24 @@
 
 (() => {
   const MAX_UPLOAD = 20 * 1024 * 1024;
+  // A Vercel recusa requisições acima de 4,5 MB; fotos maiores são reduzidas aqui antes do envio.
+  // O servidor gera no máximo 1600 px, então 2400 px não perde nada.
+  const MAX_SEND = 4 * 1024 * 1024, MAX_SIDE = 2400;
+
+  async function shrink(file) {
+    if (file.size <= MAX_SEND) return file;
+    let bmp;
+    try { bmp = await createImageBitmap(file); } catch { throw new Error('foto acima de 4 MB num formato que o navegador não consegue reduzir. Exporte como JPG e tente de novo.'); }
+    const scale = Math.min(1, MAX_SIDE / Math.max(bmp.width, bmp.height));
+    const canvas = document.createElement('canvas');
+    canvas.width = Math.round(bmp.width * scale);
+    canvas.height = Math.round(bmp.height * scale);
+    canvas.getContext('2d').drawImage(bmp, 0, 0, canvas.width, canvas.height);
+    bmp.close();
+    const blob = await new Promise(r => canvas.toBlob(r, 'image/jpeg', 0.9));
+    if (!blob || blob.size > MAX_SEND) throw new Error('não foi possível reduzir a foto para menos de 4 MB.');
+    return new File([blob], file.name.replace(/\.[^.]+$/, '') + '.jpg', { type: 'image/jpeg' });
+  }
 
   const $ = (sel, root = document) => root.querySelector(sel);
   const $$ = (sel, root = document) => [...root.querySelectorAll(sel)];
@@ -9,7 +27,7 @@
   const norm = t => String(t).toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '');
   const money = cents => (cents / 100).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
   const priceText = cents => (cents / 100).toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-  const thumb = (k, w = 480) => `/uploads/${k}-${w}.webp`;
+  const thumb = (k, w = 480) => `${state.imgBase}/${k}-${w}.webp`;
 
   // "1.290,50" ou "1290.5" → 129050
   function parsePrice(text) {
@@ -19,7 +37,7 @@
     return t && Number.isFinite(n) && n >= 0 ? Math.round(n * 100) : null;
   }
 
-  const state = { products: [], categories: [], stores: [], dirty: false, query: '', status: '' };
+  const state = { products: [], categories: [], stores: [], imgBase: '/uploads', dirty: false, query: '', status: '' };
 
   // ---- API -------------------------------------------------------------------
 
@@ -97,6 +115,7 @@
     const data = await api('/api/admin/products');
     state.products = data.products;
     state.categories = data.categories;
+    state.imgBase = data.imgBase;
     state.stores = data.stores;
   }
 
@@ -410,9 +429,9 @@
       for (const file of files) {
         if (file.size > MAX_UPLOAD) { toast(`${file.name} passa de 20 MB e foi ignorada.`, true); continue; }
         status().textContent = `Enviando ${done + 1} de ${files.length}…`;
-        const form = new FormData();
-        form.append('file', file);
         try {
+          const form = new FormData();
+          form.append('file', await shrink(file));
           const im = await api(`/api/admin/products/${p.id}/images`, { method: 'POST', form });
           p.images.push(im);
           syncSaved({ images: [...(state.products.find(x => x.id === p.id)?.images || []), im] });
