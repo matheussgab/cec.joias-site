@@ -9,8 +9,8 @@ if (!env.DATABASE_URL) {
 
 // Fotos no Supabase Storage quando configurado (obrigatório na Vercel, que não tem disco permanente); senão, em disco.
 const supabaseUrl = (env.SUPABASE_URL || '').replace(/\/$/, '');
-const storage = supabaseUrl && env.SUPABASE_SERVICE_ROLE_KEY
-  ? { url: supabaseUrl, key: env.SUPABASE_SERVICE_ROLE_KEY, bucket: env.SUPABASE_BUCKET || 'fotos' }
+const storage = supabaseUrl && env.SUPABASE_SECRET_KEY
+  ? { url: supabaseUrl, key: env.SUPABASE_SECRET_KEY, bucket: env.SUPABASE_BUCKET || 'fotos' }
   : null;
 
 export const config = {

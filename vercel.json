@@ -4,7 +4,7 @@
   "installCommand": "npm install --omit=dev",
   "buildCommand": "",
   "outputDirectory": "app",
-  "regions": ["gru1"],
+  "regions": ["pdx1"],
   "functions": {
     "api/index.js": {
       "includeFiles": "app/{index.html,admin/index.html}",

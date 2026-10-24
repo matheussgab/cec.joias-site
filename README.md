@@ -98,7 +98,7 @@ npm run dev                 # http://localhost:3000  ·  painel em /admin
 - **Banco:** Postgres do Supabase. `DATABASE_URL` usa a conexão do pooler (Supavisor).
 - **Fotos:** bucket público `fotos` no Supabase Storage. O navegador baixa as fotos direto de lá (`imgBase` no catálogo).
 - **Site:** os arquivos de `app/` saem pelo CDN da Vercel; páginas, `/p/slug`, `/admin` e `/api` passam pela função `api/index.js`.
-- **Variáveis na Vercel:** `DATABASE_URL`, `SUPABASE_URL`, `SUPABASE_SERVICE_ROLE_KEY`, `NODE_ENV=production` e, com domínio próprio, `PUBLIC_URL`.
+- **Variáveis na Vercel:** `DATABASE_URL`, `SUPABASE_URL`, `SUPABASE_SECRET_KEY`, `NODE_ENV=production` e, com domínio próprio, `PUBLIC_URL`.
 - **Migrações e admin** rodam da sua máquina, com o `.env` apontando para o Supabase: `npm run migrate` e `npm run admin:create -- email`.
 - **Fotos grandes:** a Vercel recusa envios acima de 4,5 MB, então o painel reduz no navegador as fotos acima de 4 MB antes de enviar.
 - **Deploy:** cada push na branch `produto` publica em produção; as outras branches geram prévias.

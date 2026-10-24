@@ -1,0 +1,9 @@
+.env
+.env.*
+!.env.example
+.localdb
+uploads
+node_modules
+mockup
+.impeccable
+deploy
